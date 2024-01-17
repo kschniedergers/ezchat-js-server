@@ -1,0 +1,26 @@
+{
+  "name": "@ezchat/ezchat-js-server",
+  "version": "0.0.1",
+  "description": " EZChat client for JS frontends ",
+  "main": "build/cjs/index.js",
+  "module": "build/esm/index.js",
+  "types": "build/esm/index.d.ts",
+  "repository": "https://github.com/kschniedergers/ezchat-js-server.git",
+  "author": "Kai Schniedergers <kai.schniedergers@gmail.com>",
+  "license": "Unlicense",
+  "scripts": {
+    "build": "rm -rf build/ && rollup -c",
+    "clean": "rm -rf build/ npmbuild/",
+    "generateApi": "openapi-typescript ./openapi.json  -o ./src/gen/openapi-types.d.ts",
+    "pullApiFile": "curl http://127.0.0.1:8787/openapi.json -o ./openapi.json"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^6.7.3",
+    "rollup": "^4.9.5",
+    "rollup-plugin-typescript2": "^0.36.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.8.2"
+  }
+}
