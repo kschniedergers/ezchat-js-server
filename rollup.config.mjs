@@ -1,6 +1,9 @@
+import commonjs from "@rollup/plugin-commonjs";
 import typescript from "rollup-plugin-typescript2";
+import resolve from "@rollup/plugin-node-resolve";
+import alias from "@rollup/plugin-alias";
 
-// external = ['react']
+const external = ["openapi-fetch"];
 
 export default [
     // CommonJS (for Node)
@@ -13,7 +16,14 @@ export default [
             preserveModules: true,
             preserveModulesRoot: "src",
         },
-        plugins: [typescript({ exclude: ["**/*.test.ts"], tsconfigOverride: { compilerOptions: { declaration: false } } })],
+        plugins: [
+            typescript({ exclude: ["**/*.test.ts"], tsconfigOverride: { compilerOptions: { declaration: false } } }),
+            alias({
+                entries: [{ find: "openapi-fetch", replacement: "openapi-fetch/dist/cjs/index.cjs" }],
+            }),
+            resolve(),
+            commonjs(),
+        ],
     },
     // ES module (for bundlers)
     {

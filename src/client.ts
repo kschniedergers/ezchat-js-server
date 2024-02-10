@@ -1,5 +1,5 @@
+import type { paths, operations } from "./gen/openapi-types";
 import createClient from "openapi-fetch";
-import { paths, operations } from "./gen/openapi-types";
 
 // well this is a line of code
 type CreateRoomBodyTypes = NonNullable<operations["post_CreateRoomEndpoint"]["requestBody"]>["content"]["application/json"];
@@ -125,5 +125,6 @@ export class EZChatClient {
         });
     }
 
-    // TODO get messages from room
+    // TODO
+    // - get messages from room
 }
