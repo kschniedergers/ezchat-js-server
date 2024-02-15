@@ -6,12 +6,14 @@
 
 export interface paths {
   "/rooms": {
+    /** Get all rooms (paginated) */
+    get: operations["get_GetRooms"];
     /** Create a new room */
-    post: operations["post_CreateRoomEndpoint"];
+    post: operations["post_CreateRoom"];
   };
   "/rooms/{roomId}": {
     /** Get room info */
-    get: operations["get_GetRoomEndpoint"];
+    get: operations["get_GetRoom"];
     /** Update room info */
     put: operations["put_UpdateRoomEndpoint"];
   };
@@ -49,6 +51,10 @@ export interface paths {
     /** Delete message */
     delete: operations["delete_DeleteMessageEndpoint"];
   };
+  "/c/rooms/{roomId}/messages": {
+    /** Get messages from room */
+    get: operations["get_GetMessagesChatterRoute"];
+  };
 }
 
 export type webhooks = Record<string, never>;
@@ -70,8 +76,38 @@ export type external = Record<string, never>;
 
 export interface operations {
 
+  /** Get all rooms (paginated) */
+  get_GetRooms: {
+    parameters: {
+      query?: {
+        size?: number;
+        page?: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": ({
+              id: number;
+              clientId: number;
+              /** @enum {string} */
+              roomType: "open" | "public" | "private";
+              /** @enum {string} */
+              roomStatus: "active" | "inactive";
+            })[];
+        };
+      };
+      /** @description Page must be greater than 0 */
+      400: {
+        content: {
+          "application/json": string;
+        };
+      };
+    };
+  };
   /** Create a new room */
-  post_CreateRoomEndpoint: {
+  post_CreateRoom: {
     requestBody?: {
       content: {
         "application/json": {
@@ -112,9 +148,9 @@ export interface operations {
     };
   };
   /** Get room info */
-  get_GetRoomEndpoint: {
+  get_GetRoom: {
     parameters: {
-      query: {
+      path: {
         roomId: number;
       };
     };
@@ -137,7 +173,7 @@ export interface operations {
   /** Update room info */
   put_UpdateRoomEndpoint: {
     parameters: {
-      query: {
+      path: {
         roomId: number;
       };
     };
@@ -173,12 +209,12 @@ export interface operations {
         content: {
           "application/json": ({
               id: number;
-              chatterName: string;
+              name: string;
               created: string;
               clientId: number;
               unbanDate: string | null;
               banReason: string | null;
-              chatterStatus: string;
+              status: string;
             })[];
         };
       };
@@ -257,14 +293,15 @@ export interface operations {
           "application/json": {
             chatters: ({
                 id: number;
-                chatterName: string;
+                name: string;
                 created: string;
                 clientId: number;
                 unbanDate: string | null;
                 banReason: string | null;
-                chatterStatus: string;
+                status: string;
               })[];
             total: number;
+            more: boolean;
           };
         };
       };
@@ -275,7 +312,7 @@ export interface operations {
     requestBody?: {
       content: {
         "application/json": {
-          chatterName: string;
+          name: string;
         };
       };
     };
@@ -303,12 +340,12 @@ export interface operations {
         content: {
           "application/json": {
             id: number;
-            chatterName: string;
+            name: string;
             created: string;
             clientId: number;
             unbanDate: string | null;
             banReason: string | null;
-            chatterStatus: string;
+            status: string;
           };
         };
       };
@@ -417,6 +454,26 @@ export interface operations {
       200: {
         content: {
           "application/json": Record<string, never>;
+        };
+      };
+    };
+  };
+  /** Get messages from room */
+  get_GetMessagesChatterRoute: {
+    parameters: {
+      query?: {
+        size?: number;
+        cursor?: string;
+      };
+      path: {
+        roomId: number;
+      };
+    };
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          "application/json": unknown;
         };
       };
     };

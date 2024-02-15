@@ -13,14 +13,15 @@ export default [
             dir: "build/cjs",
             format: "cjs",
             sourcemap: true,
-            preserveModules: true,
-            preserveModulesRoot: "src",
+            // preserveModules: true,
+            // preserveModulesRoot: "src",
         },
+        // external,
         plugins: [
             typescript({ exclude: ["**/*.test.ts"], tsconfigOverride: { compilerOptions: { declaration: false } } }),
-            alias({
-                entries: [{ find: "openapi-fetch", replacement: "openapi-fetch/dist/cjs/index.cjs" }],
-            }),
+            // alias({
+            //     entries: [{ find: "openapi-fetch", replacement: "openapi-fetch/dist/cjs/index.cjs" }],
+            // }),
             resolve(),
             commonjs(),
         ],

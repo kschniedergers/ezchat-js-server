@@ -1,130 +1,154 @@
+// import { FetchResponse } from "openapi-fetch";
+import { FetchResponse } from "openapi-fetch";
 import type { paths, operations } from "./gen/openapi-types";
-import createClient from "openapi-fetch";
+import createClient from "openapi-fetch/dist/cjs/index.cjs";
 
-// well this is a line of code
-type CreateRoomBodyTypes = NonNullable<operations["post_CreateRoomEndpoint"]["requestBody"]>["content"]["application/json"];
+type CreateRoomBodyTypes = NonNullable<operations["post_CreateRoom"]["requestBody"]>["content"]["application/json"];
 type UpdateRoomBodyTypes = NonNullable<operations["put_UpdateRoomEndpoint"]["requestBody"]>["content"]["application/json"];
+
+type ApiFetchResponse<T> = {
+    response: FetchResponse<any>["response"];
+    data?: T;
+    error?: any;
+};
+
+async function processApiCall<T>(ret: ApiFetchResponse<T>) {
+    if (!ret.response.ok) {
+        throw new Error(`API error: ${ret.error.toString()}`);
+    }
+    if (ret.data) return ret.data;
+    return;
+}
 
 export class EZChatClient {
     private oaiFetchClient: ReturnType<typeof createClient<paths>>;
 
     constructor(apiKey: string) {
-        // this.apiKey = apiKey;
         this.oaiFetchClient = createClient<paths>({
-            baseUrl: "http://localhost:8787",
+            baseUrl: "http://127.0.0.1:8787",
             headers: { Authorization: `Bearer ${apiKey}` },
         });
     }
 
-    getToken(chatterId: number) {
-        return this.oaiFetchClient.GET("/chatters/{chatterId}/accessToken", {
+    async getToken(chatterId: number) {
+        const ret = await this.oaiFetchClient.GET("/chatters/{chatterId}/accessToken", {
             params: {
                 path: { chatterId },
             },
         });
+        return processApiCall(ret);
     }
 
-    getChatter(chatterId: number) {
-        return this.oaiFetchClient.GET("/chatters/{chatterId}", {
+    async getChatter(chatterId: number) {
+        const ret = await this.oaiFetchClient.GET("/chatters/{chatterId}", {
             params: {
                 path: { chatterId },
             },
         });
+        return processApiCall(ret);
     }
 
-    getAllChatters(page?: number, size?: number) {
-        return this.oaiFetchClient.GET("/chatters", {
+    async getAllChatters(page?: number, size?: number) {
+        const ret = await this.oaiFetchClient.GET("/chatters", {
             params: {
                 query: { page, size },
             },
         });
+        return processApiCall(ret);
     }
 
-    createChatter(chatterName: string) {
-        return this.oaiFetchClient.POST("/chatters", {
+    async createChatter(chatterName: string) {
+        const ret = await this.oaiFetchClient.POST("/chatters", {
             body: {
-                chatterName,
+                name: chatterName,
             },
         });
+        return processApiCall(ret);
     }
 
-    deleteChatter(chatterId: number) {
-        return this.oaiFetchClient.DELETE("/chatters/{chatterId}", {
+    async deleteChatter(chatterId: number) {
+        const ret = await this.oaiFetchClient.DELETE("/chatters/{chatterId}", {
             params: {
                 path: { chatterId: chatterId },
             },
         });
+        return processApiCall(ret);
     }
 
-    getMessage(messageId: number) {
-        return this.oaiFetchClient.GET("/messages/{messageId}", {
+    async getMessage(messageId: number) {
+        const ret = await this.oaiFetchClient.GET("/messages/{messageId}", {
             params: {
                 path: { messageId },
             },
         });
+        return processApiCall(ret);
     }
 
-    deleteMessages(messageId: number) {
-        return this.oaiFetchClient.DELETE("/messages/{messageId}", {
+    async deleteMessage(messageId: number) {
+        const ret = await this.oaiFetchClient.DELETE("/messages/{messageId}", {
             params: {
                 path: { messageId },
             },
         });
+        return processApiCall(ret);
     }
 
-    createRoom(roomStatus?: CreateRoomBodyTypes["roomStatus"], roomType?: CreateRoomBodyTypes["roomType"]) {
-        return this.oaiFetchClient.POST("/rooms", {
+    async createRoom(roomStatus?: CreateRoomBodyTypes["roomStatus"], roomType?: CreateRoomBodyTypes["roomType"]) {
+        const ret = await this.oaiFetchClient.POST("/rooms", {
             body: {
                 roomStatus,
                 roomType,
             },
         });
+        return processApiCall(ret);
     }
 
-    getRoom(roomId: number) {
-        return this.oaiFetchClient.GET("/rooms/{roomId}", {
-            params: {
-                query: { roomId },
-            },
-        });
-    }
-
-    updateRoom(roomId: number, roomType: UpdateRoomBodyTypes["roomType"], roomStatus: UpdateRoomBodyTypes["roomStatus"]) {
-        return this.oaiFetchClient.PUT("/rooms/{roomId}", {
-            params: {
-                query: { roomId },
-            },
-            body: {
-                roomType,
-                roomStatus,
-            },
-        });
-    }
-
-    getChattersInRoom(roomId: number) {
-        return this.oaiFetchClient.GET("/rooms/{roomId}/chatters", {
+    async getRoom(roomId: number) {
+        const ret = await this.oaiFetchClient.GET("/rooms/{roomId}", {
             params: {
                 path: { roomId },
             },
         });
+        return processApiCall(ret);
     }
 
-    addChatterToRoom(roomId: number, chatterId: number) {
-        return this.oaiFetchClient.POST("/rooms/{roomId}/chatters/{chatterId}", {
+    async updateRoom(roomId: number, roomType?: UpdateRoomBodyTypes["roomType"], roomStatus?: UpdateRoomBodyTypes["roomStatus"]) {
+        const ret = await this.oaiFetchClient.PUT("/rooms/{roomId}", {
+            params: {
+                path: { roomId },
+            },
+            body: {
+                roomType,
+                roomStatus,
+            },
+        });
+        return processApiCall(ret);
+    }
+
+    async getChattersInRoom(roomId: number) {
+        const ret = await this.oaiFetchClient.GET("/rooms/{roomId}/chatters", {
+            params: {
+                path: { roomId },
+            },
+        });
+        return processApiCall(ret);
+    }
+
+    async addChatterToRoom(roomId: number, chatterId: number) {
+        const ret = await this.oaiFetchClient.POST("/rooms/{roomId}/chatters/{chatterId}", {
             params: {
                 path: { roomId, chatterId },
             },
         });
+        return processApiCall(ret);
     }
 
-    removeChatterFromRoom(roomId: number, chatterId: number) {
-        return this.oaiFetchClient.DELETE("/rooms/{roomId}/chatters/{chatterId}", {
+    async removeChatterFromRoom(roomId: number, chatterId: number) {
+        const ret = await this.oaiFetchClient.DELETE("/rooms/{roomId}/chatters/{chatterId}", {
             params: {
                 path: { roomId, chatterId },
             },
         });
+        return processApiCall(ret);
     }
-
-    // TODO
-    // - get messages from room
 }
