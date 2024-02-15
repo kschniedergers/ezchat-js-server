@@ -14,7 +14,7 @@ type ApiFetchResponse<T> = {
 
 async function processApiCall<T>(ret: ApiFetchResponse<T>) {
     if (!ret.response.ok) {
-        throw new Error(`API error: ${ret.error.toString()}`);
+        throw new Error(`API error: ${JSON.stringify(ret.error)}`);
     }
     if (ret.data) return ret.data;
     return;
