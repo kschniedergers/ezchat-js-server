@@ -88,14 +88,18 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          "application/json": ({
-              id: number;
-              clientId: number;
-              /** @enum {string} */
-              roomType: "open" | "public" | "private";
-              /** @enum {string} */
-              roomStatus: "active" | "inactive";
-            })[];
+          "application/json": {
+            rooms: ({
+                id: number;
+                clientId: number;
+                /** @enum {string} */
+                roomType: "open" | "public" | "private";
+                /** @enum {string} */
+                roomStatus: "active" | "inactive";
+              })[];
+            total: number;
+            more: boolean;
+          };
         };
       };
       /** @description Page must be greater than 0 */
@@ -190,9 +194,7 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
-        content: {
-          "application/json": Record<string, never>;
-        };
+        content: never;
       };
     };
   };
@@ -231,9 +233,7 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
-        content: {
-          "application/json": Record<string, never>;
-        };
+        content: never;
       };
       /** @description Chatter not owned by client */
       403: {
@@ -266,9 +266,7 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
-        content: {
-          "application/json": Record<string, never>;
-        };
+        content: never;
       };
       /** @description Chatter not in room */
       404: {
@@ -361,9 +359,7 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
-        content: {
-          "application/json": Record<string, never>;
-        };
+        content: never;
       };
     };
   };
@@ -436,9 +432,7 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
-        content: {
-          "application/json": Record<string, never>;
-        };
+        content: never;
       };
     };
   };
@@ -452,9 +446,7 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
-        content: {
-          "application/json": Record<string, never>;
-        };
+        content: never;
       };
     };
   };
