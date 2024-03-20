@@ -1,6 +1,7 @@
 {
-  "name": "@ezchat/ezchat-js-server",
-  "version": "0.0.17",
+  "name": "@ezchat/server",
+  "version": "0.0.1",
+  "private": false,
   "description": " EZChat client for JS frontends ",
   "main": "build/cjs/index.js",
   "module": "build/esm/index.js",
@@ -13,9 +14,9 @@
     "clean": "rm -rf build/ npmbuild/",
     "generateApi": "openapi-typescript ./openapi.json  -o ./src/gen/openapi-types.ts",
     "pullApiFile": "curl http://127.0.0.1:8787/openapi.json -o ./openapi.json",
-    "prepublishOnly": "yarn clean && yarn build",
-    "postpublish": "yarn clean",
-    "packnpull": "yarn build && TARBALL_NAME=$(npm pack) && rm -rf npmbuild && mkdir -p npmbuild && tar -xzf $TARBALL_NAME -C npmbuild && rm $TARBALL_NAME"
+    "prepublishOnly": "pnpm clean && pnpm build",
+    "postpublish": "pnpm clean",
+    "packnpull": "pnpm build && TARBALL_NAME=$(npm pack) && rm -rf npmbuild && mkdir -p npmbuild && tar -xzf $TARBALL_NAME -C npmbuild && rm $TARBALL_NAME"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.0",
