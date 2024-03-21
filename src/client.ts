@@ -1,13 +1,13 @@
 // import { FetchResponse } from "openapi-fetch";
 import { FetchResponse } from "openapi-fetch";
 import type { paths, operations } from "./gen/openapi-types";
-import createClient from "openapi-fetch/dist/cjs/index.cjs";
+import createClient from "openapi-fetch";
 
 type CreateRoomBodyTypes = NonNullable<operations["post_CreateRoom"]["requestBody"]>["content"]["application/json"];
 type UpdateRoomBodyTypes = NonNullable<operations["put_UpdateRoomEndpoint"]["requestBody"]>["content"]["application/json"];
 
 type ApiFetchResponse<T> = {
-    response: FetchResponse<any>["response"];
+    response: FetchResponse<any, any>["response"];
     data?: T;
     error?: any;
 };

@@ -25,9 +25,10 @@
     "openapi-typescript": "^6.7.3",
     "rollup": "^4.9.5",
     "rollup-plugin-typescript2": "^0.36.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "tslib": "^2.6.2"
   },
   "dependencies": {
-    "openapi-fetch": "^0.8.2"
+    "openapi-fetch": "^0.9.3"
   }
 }
