@@ -48,7 +48,7 @@ export class EZChatClient {
         return processApiCall(ret);
     }
 
-    async getAllChatters(page?: number, size?: number) {
+    async getAllChatters({ page, size }: { page?: number; size?: number } = {}) {
         const ret = await this.oaiFetchClient.GET("/chatters", {
             params: {
                 query: { page, size },
@@ -93,7 +93,13 @@ export class EZChatClient {
         return processApiCall(ret);
     }
 
-    async createRoom(roomStatus?: CreateRoomBodyTypes["roomStatus"], roomType?: CreateRoomBodyTypes["roomType"]) {
+    async createRoom({
+        roomStatus,
+        roomType,
+    }: {
+        roomStatus?: CreateRoomBodyTypes["roomStatus"];
+        roomType?: CreateRoomBodyTypes["roomType"];
+    } = {}) {
         const ret = await this.oaiFetchClient.POST("/rooms", {
             body: {
                 roomStatus,
@@ -112,7 +118,19 @@ export class EZChatClient {
         return processApiCall(ret);
     }
 
-    async updateRoom(roomId: number, roomType?: UpdateRoomBodyTypes["roomType"], roomStatus?: UpdateRoomBodyTypes["roomStatus"]) {
+    async getRooms({ page, size }: { page?: number; size?: number } = {}) {
+        const ret = await this.oaiFetchClient.GET("/rooms", {
+            params: {
+                query: { page, size },
+            },
+        });
+        return processApiCall(ret);
+    }
+
+    async updateRoom(
+        roomId: number,
+        { roomStatus, roomType }: { roomStatus?: UpdateRoomBodyTypes["roomStatus"]; roomType?: UpdateRoomBodyTypes["roomType"] }
+    ) {
         const ret = await this.oaiFetchClient.PUT("/rooms/{roomId}", {
             params: {
                 path: { roomId },
