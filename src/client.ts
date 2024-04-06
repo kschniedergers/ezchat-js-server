@@ -6,6 +6,8 @@ import createClient from "openapi-fetch";
 type CreateRoomBodyTypes = NonNullable<operations["post_CreateRoom"]["requestBody"]>["content"]["application/json"];
 type UpdateRoomBodyTypes = NonNullable<operations["put_UpdateRoomEndpoint"]["requestBody"]>["content"]["application/json"];
 
+const BASE_URL = "https://ez-chat-dev.ezchat.workers.dev";
+
 type ApiFetchResponse<T> = {
     response: FetchResponse<any, any>["response"];
     data?: T;
@@ -23,9 +25,9 @@ async function processApiCall<T>(ret: ApiFetchResponse<T>) {
 export class EZChatClient {
     private oaiFetchClient: ReturnType<typeof createClient<paths>>;
 
-    constructor(apiKey: string) {
+    constructor(apiKey: string, settings: { baseUrl?: string } = {}) {
         this.oaiFetchClient = createClient<paths>({
-            baseUrl: "http://127.0.0.1:8787",
+            baseUrl: settings.baseUrl || BASE_URL,
             headers: { Authorization: `Bearer ${apiKey}` },
         });
     }
